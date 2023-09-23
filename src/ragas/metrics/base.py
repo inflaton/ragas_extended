@@ -14,10 +14,11 @@ from math import floor
 
 from datasets import Dataset
 from langchain.callbacks.manager import CallbackManager, trace_as_chain_group
-from langchain.chat_models import ChatOpenAI
+from langchain.llms import OpenAI
 from langchain.chat_models.base import BaseChatModel
 from langchain.llms.base import BaseLLM
 from tqdm import tqdm
+
 
 if t.TYPE_CHECKING:
     from langchain.callbacks.base import Callbacks
@@ -107,7 +108,7 @@ class Metric(ABC):
 
 
 def _llm_factory():
-    return ChatOpenAI(model_name="gpt-3.5-turbo-16k")  # type: ignore
+    return OpenAI(model_name="gpt-3.5-turbo-instruct")  # type: ignore
 
 
 @dataclass
