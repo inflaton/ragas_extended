@@ -1,5 +1,10 @@
 import json
 from datasets import load_dataset
+from timeit import default_timer as timer
+
+from dotenv import load_dotenv
+
+load_dotenv(override=False)
 
 from ragas import evaluate
 from ragas.metrics import answer_relevancy, faithfulness
@@ -24,16 +29,19 @@ def load_baseline_dataset(use_ground_truths):
     return ds
 
 
-def test_evaluate_e2e_baseline_dataset():
+def evaluate_e2e_baseline_dataset(baseline_index, filename):
     ds = load_baseline_dataset(True)
-    baseline_index = [3, 9, 14, 16, 22, 24, 26, 27]
+
+    start = timer()
     result = evaluate(
         ds.select(baseline_index),
         metrics=[faithfulness, answer_relevancy],
     )
+    end = timer()
+
+    print(f"Completed in {end - start:.3f}s")
     print(result)
 
-    filename = "test_evaluate_e2e_baseline_dataset.csv.log"
     print(f"Saving results to {filename} ...")
 
     result.to_pandas().to_csv(filename)
@@ -43,3 +51,15 @@ def test_evaluate_e2e_baseline_dataset():
     file.close()
 
     assert result["faithfulness"] > 0.9
+
+
+def test_evaluate_e2e_one_record():
+    baseline_index = [3]
+    filename = "test_evaluate_e2e_one_record.csv.log"
+    evaluate_e2e_baseline_dataset(baseline_index, filename)
+
+
+def test_evaluate_e2e_baseline_dataset():
+    baseline_index = [3, 9, 14, 16, 22, 24, 26, 27]
+    filename = "test_evaluate_e2e_baseline_dataset.csv.log"
+    evaluate_e2e_baseline_dataset(baseline_index, filename)
