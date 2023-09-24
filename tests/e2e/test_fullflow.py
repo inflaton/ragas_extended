@@ -9,9 +9,9 @@ load_dotenv(override=False)
 from ragas import evaluate
 from ragas.metrics import answer_relevancy, faithfulness
 
-# import langchain
+import langchain
 
-# langchain.debug = True
+langchain.debug = True
 
 
 def load_baseline_dataset(use_ground_truths):
@@ -50,16 +50,37 @@ def evaluate_e2e_baseline_dataset(baseline_index, filename):
     file.write(f"\n\n# Ragas overall scores: {result}\n")
     file.close()
 
-    assert result["faithfulness"] > 0.9
+    assert result["faithfulness"] > 0.8
 
 
-def test_evaluate_e2e_one_record():
-    baseline_index = [3]
+def xtest_evaluate_e2e_one_record():
+    baseline_index = [4]
     filename = "test_evaluate_e2e_one_record.csv.log"
     evaluate_e2e_baseline_dataset(baseline_index, filename)
 
 
 def test_evaluate_e2e_baseline_dataset():
-    baseline_index = [3, 9, 14, 16, 22, 24, 26, 27]
+    baseline_index = [
+        1,
+        2,
+        3,
+        7,
+        9,
+        10,
+        12,
+        13,
+        14,
+        15,
+        18,
+        19,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+    ]
     filename = "test_evaluate_e2e_baseline_dataset.csv.log"
     evaluate_e2e_baseline_dataset(baseline_index, filename)

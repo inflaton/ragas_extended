@@ -19,6 +19,17 @@ from langchain.chat_models.base import BaseChatModel
 from langchain.llms.base import BaseLLM
 from tqdm import tqdm
 
+import os
+from dotenv import load_dotenv
+
+load_dotenv(override=False)
+RAGAS_OPENAI_MODEL_NAME = os.environ.get("RAGAS_OPENAI_MODEL_NAME")
+model_name = (
+    "gpt-3.5-turbo-instruct"
+    if RAGAS_OPENAI_MODEL_NAME is None
+    else RAGAS_OPENAI_MODEL_NAME
+)
+print(f"using model: {model_name}")
 
 if t.TYPE_CHECKING:
     from langchain.callbacks.base import Callbacks
@@ -108,7 +119,7 @@ class Metric(ABC):
 
 
 def _llm_factory():
-    return OpenAI(model_name="gpt-3.5-turbo-instruct")  # type: ignore
+    return OpenAI(model_name=model_name)  # type: ignore
 
 
 @dataclass
